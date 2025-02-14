@@ -344,25 +344,19 @@ def station_accidents(request):
     accidents = Acciedent.objects.filter(city=station.city)
     return render(request, 'station_accidents.html', {'station': station, 'accidents': accidents})
 def station_enquiry(request, station_id):
-    # Get the station details
     station = get_object_or_404(Station, id=station_id)
-
     if request.method == 'POST':
         form = StationEnquiryForm(request.POST)
         if form.is_valid():
             enquiry = form.save(commit=False)
-            enquiry.station = station  # Link enquiry to station
-            
-            # Fix: Assign the logged-in user correctly
+            enquiry.station = station 
             if 'user_id' in request.session:
                 enquiry.user = get_object_or_404(Login, id=request.session['user_id'])
             else:
-                enquiry.user = None  # Anonymous enquiry
-
+                enquiry.user = None 
             enquiry.save()
             messages.success(request, "Your enquiry has been submitted successfully!")
-            return redirect('stationsearch')  # Redirect after success
+            return redirect('stationsearch')
     else:
         form = StationEnquiryForm()
-
     return render(request, 'station_enquiry_form.html', {'form': form, 'station': station})
