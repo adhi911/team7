@@ -6,29 +6,20 @@
     <title>Document</title>
 </head>
 <body>
-    def station_enquiry(request, station_id):
-    # Get the station details
-    station = get_object_or_404(Station, id=station_id)
+    
 
-    if request.method == 'POST':
-        form = StationEnquiryForm(request.POST)
-        if form.is_valid():
-            enquiry = form.save(commit=False)
-            enquiry.station = station  # Link enquiry to station
-            
-            # Fix: Assign the logged-in user correctly
-            if 'user_id' in request.session:
-                enquiry.user = get_object_or_404(Login, id=request.session['user_id'])
-            else:
-                enquiry.user = None  # Anonymous enquiry
+{% block content %}
+<h2>Submit Enquiry for {{ station.stationid }}</h2>
 
-            enquiry.save()
-            messages.success(request, "Your enquiry has been submitted successfully!")
-            return redirect('stationsearch')  # Redirect after success
-    else:
-        form = StationEnquiryForm()
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
 
-    return render(request, 'station_enquiry_form.html', {'form': form, 'station': station})
+    <button type="submit" class="btn btn-success">Submit Enquiry</button>
+</form>
+
+<a href="{% url 'stationsearch' %}">Back to Search</a>
+{% endblock %}
 
 </body>
 </html>
