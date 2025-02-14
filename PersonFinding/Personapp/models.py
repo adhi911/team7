@@ -62,7 +62,17 @@ class Acciedent(models.Model):
     currentdate=models.DateField(auto_now_add=True)
     accidentdetails=models.CharField(max_length=200)
     media=models.ImageField(upload_to='image',blank=True)
-    
+class StationEnquiry(models.Model):
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
+    user = models.ForeignKey(Login, on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    message = models.TextField()
+    current_date= models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Enquiry by {self.name} for {self.station.stationid}"
+
     
 
 

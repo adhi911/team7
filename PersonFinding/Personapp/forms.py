@@ -57,5 +57,7 @@ class acciedentregform(forms.ModelForm):
         model=Acciedent
         fields=['city','district','location','accidentdetails','media']
 
-
-
+class StationEnquiryForm(forms.ModelForm):
+    class Meta:
+        model = StationEnquiry
+        fields = ['name', 'email', 'message']

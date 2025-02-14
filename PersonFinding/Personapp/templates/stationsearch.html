@@ -39,6 +39,10 @@
             <td>{{station.district}}</td>
             <td>{{station.city}}</td>
             <td>{{station.contactno}}</td>
+            <td>
+                <a href="{% url 'station_enquiry' station.id %}" class="btn btn-primary">Enquiry</a>
+            </td>
+
         </tr>
         {% endfor %}
     {% endif %}
