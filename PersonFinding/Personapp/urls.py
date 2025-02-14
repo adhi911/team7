@@ -42,6 +42,7 @@ urlpatterns = [
     path('accident_edit/<int:id>/',views.accident_edit,name='accident_edit'),
     path('accident_delete/<int:id>/',views.accident_delete,name='accident_delete'),
     path('station_accidents', views.station_accidents, name='station_accidents'),
-    path('station/enquiry/<int:station_id>/', views.station_enquiry, name='station_enquiry')
+    path('station/enquiry/<int:station_id>/', views.station_enquiry, name='station_enquiry'),
+     path('station/enquiries/', views.station_enquiries_list, name='station_enquiries_list')
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
 

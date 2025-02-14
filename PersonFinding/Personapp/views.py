@@ -366,3 +366,11 @@ def station_enquiry(request, station_id):
         form = StationEnquiryForm()
 
     return render(request, 'station_enquiry_form.html', {'form': form, 'station': station})
+def station_enquiries_list(request):
+    station_id = request.session.get('station_id')
+    if not station_id:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
+    station = get_object_or_404(Station, loginid=station_id)
+    enquiries = StationEnquiry.objects.filter(station=station)
+    return render(request, 'station_enquiries_list.html', {'station': station, 'enquiries': enquiries})
