@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Edit Form</title>
+    </head>
+    <body>
+        <h1>EDIT DETAILS</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            {{form1.as_p}}
+            <button type="submit">UPDATE</button>
+        </form>
+        {% if messages %}
+            <ul>
+             {% for message in messages %}
+                <li>{{message}}</li>
+            {% endfor %}   
+            </ul>
+        {% endif %}
+    </body>
+</html>

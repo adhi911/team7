@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block content %}
+<h2>Accident Reports for {{ station.city }}</h2>
+
+{% if accidents %}
+    <table border="1">
+        <tr>
+            <th>Accident ID</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Reported By</th>
+        </tr>
+        {% for accident in accidents %}
+        <tr>
+            <td>{{ accident.id }}</td>
+            <td>{{ accident.currentdate }}</td>
+            <td>{{ accident.location }}</td>
+            <td>{{ accident.userid.email }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No accident reports found in your city.</p>
+{% endif %}
+
+<a href="{% url 'stationhome' %}">Back to Dashboard</a>
+{% endblock %}
+</body>
+</html>

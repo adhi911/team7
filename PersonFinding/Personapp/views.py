@@ -1,0 +1,345 @@
+from django.shortcuts import render,redirect,get_object_or_404
+from .forms import *
+from django.contrib import messages
+from django.db.models import Q
+from .models import *
+def index(request):
+    return render(request,'index.html')
+def login(request):
+    return render(request,'loginindex.html')
+def adminhome(request):
+    return render(request,'adminindex.html')
+def Stationregister(request):
+    if request.method=='POST':
+        form=Stationregform(request.POST)
+        logform=Loginregform(request.POST)
+        if form.is_valid() and logform.is_valid():
+            a=logform.save(commit=False)
+            a.usertype='station'
+            a.save()
+            b=form.save(commit=False)
+            b.loginid=a
+            b.save()
+            messages.success(request,'User data saved successfully!')
+            return redirect('index')
+    else:
+         form = Stationregform()
+         logform=Loginregform()
+    return render(request, 'user_form.html',{'form': form,'logform':logform})
+def Hospitalregister(request):
+    if request.method=='POST':
+        form=Hospitalregform(request.POST)
+        logform=Loginregform(request.POST)
+        if form.is_valid() and logform.is_valid():
+            a=logform.save(commit=False)
+            a.usertype='hospital'
+            a.save()
+            b=form.save(commit=False)
+            b.loginid=a
+            b.save()
+            messages.success(request,'User data saved successfully!')
+            return redirect('index')
+    else:
+         form = Hospitalregform()
+         logform=Loginregform()
+    return render(request, 'hospital_form.html',{'form': form,'logform':logform})
+def Userregister(request):
+    if request.method=='POST':
+        form=Userregform(request.POST)
+        logform=Loginregform(request.POST)
+        if form.is_valid() and logform.is_valid():
+            a=logform.save(commit=False)
+            a.usertype='user'
+            a.save()
+            b=form.save(commit=False)
+            b.loginid=a
+            b.save()
+            messages.success(request,'User data saved successfully!')
+            return redirect('login')
+    else:
+         form = Userregform()
+         logform=Loginregform()
+    return render(request, 'userloginform.html',{'form': form,'logform':logform})
+def Station_list_view(request):
+    users=Station.objects.all()
+    return render(request,'stationtable.html',{'users':users})
+def Hospital_list_view(request):
+    users=Hospital.objects.all()
+    return render(request,'hospitaltable.html',{'users':users})
+def User_list_view(request):
+    users=User.objects.all()
+    return render(request,'usertable.html',{'users':users})
+def user_edit(request,id):
+    users=get_object_or_404(User,id=id)
+    if request.method=='POST':
+        form=Userregform(request.POST,instance=users)
+        if form.is_valid():
+            form.save()
+            return redirect('usertable')
+    else:
+         form = Userregform(instance=users)
+    return render(request,'edit.html',{'form': form})
+def custom_login_view(request):
+    if request.method=='POST':
+        form=LoginCheck(request.POST)
+        if form.is_valid():
+            username=form.cleaned_data['email']
+            password=form.cleaned_data['password']
+            try:
+                user=Login.objects.get(email=username)
+                if user.password==password:
+                    if user.usertype=='user':
+                        request.session['user_id']=user.id
+                        return redirect('userhome')
+                    elif user.usertype=='station':
+                        request.session['station_id']=user.id
+                        return redirect('stationhome')
+                    elif user.usertype=='hospital':
+                        request.session['hospital_id']=user.id
+                        return redirect('hospitalhome')
+                else:
+                    messages.error(request,'invalid password') 
+            except User.DoesNotExist:
+                messages.error(request,'user does not exist')
+    else:
+        form=LoginCheck()
+    return render(request,'loginindex.html',{'form':form})
+def userhome(request):
+    return render(request,'userhome.html')
+def stationhome(request):
+    return render(request,'stationhome.html')
+def hospitalhome(request):
+    return render(request,'hospitalhome.html')
+def userhomeprofile(request):
+    userid=request.session.get('user_id')
+    login_detail=get_object_or_404(Login,id=userid)
+    data=get_object_or_404(User,loginid=login_detail)
+    if request.method=='POST':
+        form=UserEditform(request.POST,instance=data)
+        form1=Loginregform(request.POST,instance=login_detail)
+        if form.is_valid() and form1.is_valid():
+            form.save()
+            form1.save()
+            return redirect('userhome')
+    else:
+        form=UserEditform(instance=data)
+        form1=Loginregform(instance=login_detail)
+    return render(request,'userprofile.html',{'form':form,'form1':form1})
+
+def hospitalhomeprofile(request):
+    userid=request.session.get('hospital_id')
+    login_detail=get_object_or_404(Login,id=userid)
+    data=get_object_or_404(Hospital,loginid=login_detail)
+    if request.method=='POST':
+        form=HospitalEditform(request.POST,instance=data)
+        form1=Loginregform(request.POST,instance=login_detail)
+        if form.is_valid() and form1.is_valid():
+            form.save()
+            form1.save()
+            return redirect('hospitalhome')
+    else:
+        form=HospitalEditform(instance=data)
+        form1=Loginregform(instance=login_detail)
+    return render(request,'hospitalprofile.html',{'form':form,'form1':form1})
+
+def stationhomeprofile(request):
+    userid=request.session.get('station_id')
+    login_detail=get_object_or_404(Login,id=userid)
+    data=get_object_or_404(Station,loginid=login_detail)
+    print("userid..",data)
+    if request.method=='POST':
+        form=StationEditform(request.POST,instance=data)
+        form1=Loginregform(request.POST,instance=login_detail)
+        if form.is_valid() and form1.is_valid():
+            form.save()
+            form1.save()
+            return redirect('stationhome')
+    else:
+        form=StationEditform(instance=data) 
+        form1=Loginregform(instance=login_detail)
+    return render(request,'stationprofile.html',{'form':form,'form1':form1})
+            
+def stationsearch(request):
+    if request.method == 'POST':
+        query = request.POST.get('search')
+        stations = Station.objects.filter(
+            Q(stationid__icontains=query) |
+            Q(addressline1__icontains=query) |
+            Q(addressline2__icontains=query) |
+            Q(district__icontains=query) |
+            Q(city__icontains=query) |
+            Q(contactno__icontains=query)
+        )
+        
+        # Check if no results were found
+        if not stations:
+            messages.error(request, 'No results found.')
+        
+        return render(request, 'stationsearch.html', {'stations': stations})
+    else:
+        return render(request, 'stationsearch.html')        
+    
+def hospitalsearch(request):
+    if request.method == 'POST':
+        query = request.POST.get('search')
+        stations = Hospital.objects.filter(
+            Q(hospitalname__icontains=query) |
+            Q(hospitaladdress__icontains=query) |
+            Q(city__icontains=query) |
+            Q(district__icontains=query) |
+            Q(state__icontains=query)
+        )
+        
+        # Check if no results were found
+        if not stations:
+            messages.error(request, 'No results found.')
+        
+        return render(request, 'hospitalsearch.html', {'stations': stations})
+    else:
+        return render(request, 'hospitalsearch.html')            
+def missform(request):
+    logid = request.session.get('user_id')
+    loddata = get_object_or_404(Login,id=logid)
+    if request.method == 'POST':
+        miss=missingpersonregform(request.POST,request.FILES)
+        if miss.is_valid():
+            var=miss.cleaned_data['stationid']
+            print(var)
+            missdata=miss.save(commit=False)
+            missdata.userid = loddata
+            missdata.stationid=var
+            missdata.save()
+            return redirect('userhome')
+    else:
+        miss=missingpersonregform()
+    return render(request,'missingperson.html',{'miss':miss})
+
+def user_list_view(request):
+    users=Missingperson.objects.all()
+    return render(request,'Editpersonform.html',{'users':users})
+def user_delete(request,id):
+    user=get_object_or_404(Missingperson,id=id)
+    user.delete()
+    return redirect('table')   
+def user_edit(request,id):
+    users=get_object_or_404(Missingperson,id=id)
+    if request.method=='POST':
+        form=missingpersonregform(request.POST,request.FILES,instance=users)
+        if form.is_valid():
+            form.save()
+            return redirect('table')
+    else:
+         form = missingpersonregform(instance=users)
+    return render(request,'edit.html',{'form': form})
+
+def station_missing_details(request):
+    session_id = request.session.get('station_id')
+    loddata = get_object_or_404(Station,loginid=session_id)  
+    missing_persons = Missingperson.objects.filter(stationid=loddata)
+    return render(request, 'registerview.html', {'missing_persons': missing_persons})
+
+def missing_list_view(request):
+    session_id = request.session.get('station_id')
+    loddata = get_object_or_404(Station,loginid=session_id)  
+    missing_persons = Missingperson.objects.all()
+    return render(request, 'registerview.html', {'missing_persons': missing_persons})
+
+def create_complaint(request): 
+    if request.method=='POST':
+        form=complaint(request.POST)
+        if form.is_valid():
+            a=form.save(commit=False)
+            user=get_object_or_404(Login,id=request.session['user_id'])
+            a.userid=user
+            a.save()
+            return redirect('userhome')
+    else:
+            form = complaint()
+    return render(request,'user_complaint.html',{'form': form})
+def ViewComplaints (request):
+    complaints=UserComp.objects.all()
+    return render(request, 'complaintview.html', {'form': complaints})
+
+def ListComplaints (request):
+    user=get_object_or_404(Login,id=request.session['user_id'])
+    complaints=UserComp.objects.filter(userid=user)
+    return render(request, 'listcomplaints.html', {'form':complaints})
+
+def EditComplaint(request, id):
+    complaints=get_object_or_404(UserComp, id=id)
+    if request.method=="POST":
+        form =complaint(request.POST, instance=complaints)
+        if form.is_valid():
+            form.save()
+            messages.success (request, 'Complaint edited successfully')
+            return redirect('ListComplaints')
+    else:
+        form=complaint(instance=complaints)
+    return render(request, 'public_complaint.html', {'form': form})
+
+def DeleteComplaint (request,id):
+    complaint=get_object_or_404(UserComp, id=id)
+    complaint.delete()
+    messages.success (request, 'Complaint deleted successfully')
+    return redirect('ListComplaints')
+def ComplaintReply (request,id):
+    complaint=get_object_or_404(UserComp,id=id)
+    if request.method=="POST":
+        form=ComplaintReplyForm (request.POST,instance=complaint)
+        if form.is_valid():
+            form.save()
+            messages.success (request, 'Complaint edited successfully')
+            return redirect('ViewComplaints')
+    else:
+        form=ComplaintReplyForm(instance=complaint)
+    return render(request, 'reply.html', {'form': form,'complaint':complaint})
+
+def ShowReply (request,id):
+    complaint=get_object_or_404(UserComp, id=id)
+    return render(request, 'view_reply.html', {'complaint':complaint})
+
+def accidentregform(request):
+    id=request.session['user_id']
+    a=get_object_or_404(Login,id=id)
+    if request.method == 'POST':
+        form = acciedentregform(request.POST, request.FILES)
+        if form.is_valid():
+            accident = form.save(commit=False)
+            accident.userid = a
+            accident.save()
+            return redirect('userhome') 
+    else:
+        form = acciedentregform()
+    return render(request, 'register_accident.html', {'form': form})
+
+def ListAccident (request):
+    user=get_object_or_404(Login,id=request.session['user_id'])
+    complaints=Acciedent.objects.filter(userid=user)
+    return render(request, 'listaccident.html', {'form':complaints})
+
+def accident_edit(request, id):
+    complaints=get_object_or_404(Acciedent, id=id)
+    if request.method=="POST":
+        form =acciedentregform(request.POST,request.FILES, instance=complaints)
+        if form.is_valid():
+            form.save()
+            messages.success (request, 'Complaint edited successfully')
+            return redirect('ListAccident')
+    else:
+        form=acciedentregform(instance=complaints)
+    return render(request, 'accident_edit.html', {'form': form})
+
+def accident_delete (request,id):
+    complaint=get_object_or_404(Acciedent, id=id)
+    complaint.delete()
+    messages.success (request, 'Complaint deleted successfully')
+    return redirect('ListAccident')
+
+def station_accidents(request):
+    station_id = request.session.get('station_id')
+    if not station_id:
+        messages.error(request, "Session expired. Please login again.")
+        return redirect('login')
+    station = get_object_or_404(Station, loginid=station_id)
+    accidents = Acciedent.objects.filter(city=station.city)
+    return render(request, 'station_accidents.html', {'station': station, 'accidents': accidents})
