@@ -1,0 +1,16 @@
+
+
+{% block content %}
+<h2>Reply to Enquiry from {{ enquiry.name }}</h2>
+
+<p><strong>Message:</strong> {{ enquiry.message }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">Send Reply</button>
+</form>
+
+<a href="{% url 'station_enquiries_list' %}">Back to Enquiries</a>
+{% endblock %}

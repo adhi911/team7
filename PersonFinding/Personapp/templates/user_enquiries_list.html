@@ -1,0 +1,43 @@
+
+
+{% block content %}
+<h2>My Enquiries</h2>
+
+{% if enquiries %}
+    <table border="1">
+        <tr>
+            <th>Station ID</th>
+            <th>Message</th>
+            <th>Reply</th>
+            <th>Submitted On</th>
+        </tr>
+        {% for enquiry in enquiries %}
+        <tr>
+            <td>{{ enquiry.station.stationid }}</td>
+            <td>{{ enquiry.message }}</td>
+            <td>
+                {% if enquiry.reply %}
+                    <span class="text-success">{{ enquiry.reply }}</span>
+                {% else %}
+                    <span class="text-danger">No reply yet</span>
+                {% endif %}
+            </td>
+            <td>{{ enquiry.current_date }}</td>
+            <td>
+                {% if not enquiry.reply %}
+                    <a href="{% url 'user_enquiry_edit' enquiry.id %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'user_enquiry_delete' enquiry.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this enquiry?');">Delete</a>
+                {% else %}
+                    <span class="text-success">Replied</span>
+                {% endif %}
+            </td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No enquiries found.</p>
+{% endif %}
+
+<a href="{% url 'userhome' %}">Back to Dashboard</a>
+{% endblock %}

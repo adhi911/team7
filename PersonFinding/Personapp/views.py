@@ -360,3 +360,65 @@ def station_enquiry(request, station_id):
     else:
         form = StationEnquiryForm()
     return render(request, 'station_enquiry_form.html', {'form': form, 'station': station})
+def station_enquiries_list(request):
+    station_id = request.session.get('station_id')
+    if not station_id:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
+    station = get_object_or_404(Station, loginid=station_id)
+    enquiries = StationEnquiry.objects.filter(station=station)
+    return render(request, 'station_enquiries_list.html', {'station': station, 'enquiries': enquiries})
+def station_enquiry_reply(request, enquiry_id):
+    enquiry = get_object_or_404(StationEnquiry, id=enquiry_id)
+
+    if request.method == 'POST':
+        form = StationEnquiryReplyForm(request.POST, instance=enquiry)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Reply sent successfully!")
+            return redirect('station_enquiries_list')  # Redirect to enquiry list
+    else:
+        form = StationEnquiryReplyForm(instance=enquiry)
+
+    return render(request, 'station_enquiry_reply.html', {'form': form, 'enquiry': enquiry})
+def user_enquiries_list(request):
+    # Get the user ID from session
+    user_id = request.session.get('user_id')
+
+    if not user_id:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
+
+    # Get user enquiries
+    enquiries = StationEnquiry.objects.filter(user_id=user_id).order_by('-current_date')
+
+    return render(request, 'user_enquiries_list.html', {'enquiries': enquiries})
+def user_enquiry_edit(request, enquiry_id):
+    enquiry = get_object_or_404(StationEnquiry, id=enquiry_id)
+
+    # Prevent update if the enquiry has a reply
+    if enquiry.reply:
+        messages.error(request, "You cannot edit this enquiry because the station has already replied.")
+        return redirect('user_enquiries_list')
+
+    if request.method == 'POST':
+        form = StationEnquiryForm(request.POST, instance=enquiry)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Enquiry updated successfully!")
+            return redirect('user_enquiries_list')
+    else:
+        form = StationEnquiryForm(instance=enquiry)
+
+    return render(request, 'user_enquiry_edit.html', {'form': form, 'enquiry': enquiry})
+def user_enquiry_delete(request, enquiry_id):
+    enquiry = get_object_or_404(StationEnquiry, id=enquiry_id)
+
+    # Prevent delete if enquiry has a reply
+    if enquiry.reply:
+        messages.error(request, "You cannot delete this enquiry because the station has already replied.")
+        return redirect('user_enquiries_list')
+
+    enquiry.delete()
+    messages.success(request, "Enquiry deleted successfully!")
+    return redirect('user_enquiries_list')

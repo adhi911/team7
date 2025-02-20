@@ -61,3 +61,10 @@ class StationEnquiryForm(forms.ModelForm):
     class Meta:
         model = StationEnquiry
         fields = ['name', 'email', 'message']
+class StationEnquiryReplyForm(forms.ModelForm):
+    class Meta:
+        model = StationEnquiry
+        fields = ['reply']
+        widgets = {
+            'reply': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your reply here...'}),
+        }

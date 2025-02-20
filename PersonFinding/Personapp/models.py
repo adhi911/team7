@@ -68,6 +68,7 @@ class StationEnquiry(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     message = models.TextField()
+    reply = models.TextField(blank=True, null=True)  # New field for station reply
     current_date= models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
