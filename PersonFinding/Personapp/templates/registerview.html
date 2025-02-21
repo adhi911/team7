@@ -1,12 +1,12 @@
 
-{% extends 'indexheader.html' %}
-{% block content %}
+{% comment %} {% extends 'indexheader.html' %}
+{% block content %} {% endcomment %}
 {% load static %}
 <html>
 <body>
-    <link href="{% static 'admin/vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    {% comment %} <link href="{% static 'admin/vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet"> {% endcomment %}
 <table id="basic-datatables" class="display table table-striped table-hover" border="2">
-        <thead>
+        <thead> 
         <tr>
             <th>Name</th>
             <th>Picture</th>
@@ -45,4 +45,4 @@
     </tbody>
 </table></body>
 </html>
-{% endblock %}
+{% comment %} {% endblock %} {% endcomment %}
