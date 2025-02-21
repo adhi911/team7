@@ -47,6 +47,7 @@ urlpatterns = [
     path('station/enquiry/reply/<int:enquiry_id>/', views.station_enquiry_reply, name='station_enquiry_reply'),
     path('user/enquiries/', views.user_enquiries_list, name='user_enquiries_list'),
     path('user/enquiry/edit/<int:enquiry_id>/', views.user_enquiry_edit, name='user_enquiry_edit'),
-    path('user/enquiry/delete/<int:enquiry_id>/', views.user_enquiry_delete, name='user_enquiry_delete')
+    path('user/enquiry/delete/<int:enquiry_id>/', views.user_enquiry_delete, name='user_enquiry_delete'),
+    path('custom_logout_view', views.custom_logout_view, name='custom_logout_view')
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
 

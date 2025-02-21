@@ -408,3 +408,6 @@ def user_enquiry_delete(request, enquiry_id):
     enquiry.delete()
     messages.success(request, "Enquiry deleted successfully!")
     return redirect('user_enquiries_list')
+def custom_logout_view(request):
+    request.session.flush()
+    return redirect('index')    
