@@ -68,11 +68,25 @@ class StationEnquiry(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     message = models.TextField()
-    reply = models.TextField(blank=True, null=True)  # New field for station reply
+    reply = models.TextField(blank=True, null=True)  
     current_date= models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Enquiry by {self.name} for {self.station.stationid}"
+    
+class CaseSheet(models.Model):
+    hospital = models.ForeignKey('Login', on_delete=models.CASCADE) 
+    patient_name = models.CharField(max_length=100)
+    address = models.TextField()
+    district = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    gender = models.CharField(max_length=10)
+    age = models.PositiveIntegerField()
+    contact_no = models.CharField(max_length=15)
+    other_details = models.TextField(blank=True, null=True)
+    current_date = models.DateField(auto_now_add=True)
+    def __str__(self):
+        return f"Case Sheet for {self.patient_name} - {self.hospital.email}"  
 
     
 

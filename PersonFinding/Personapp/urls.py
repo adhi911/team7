@@ -48,6 +48,11 @@ urlpatterns = [
     path('user/enquiries/', views.user_enquiries_list, name='user_enquiries_list'),
     path('user/enquiry/edit/<int:enquiry_id>/', views.user_enquiry_edit, name='user_enquiry_edit'),
     path('user/enquiry/delete/<int:enquiry_id>/', views.user_enquiry_delete, name='user_enquiry_delete'),
-    path('custom_logout_view', views.custom_logout_view, name='custom_logout_view')
+    path('custom_logout_view', views.custom_logout_view, name='custom_logout_view'),
+    path('case_sheet_list', views.case_sheet_list, name='case_sheet_list'),
+    path('case_sheet_add', views.case_sheet_add, name='case_sheet_add'),
+    path('case_sheet_edit/<int:id>', views.case_sheet_edit, name='case_sheet_edit'),
+    path('case_sheet_delete/<int:id>', views.case_sheet_delete, name='case_sheet_delete'),
+    path('case_search', views.case_search, name='case_search')
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
 

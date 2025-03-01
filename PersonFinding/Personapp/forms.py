@@ -68,3 +68,7 @@ class StationEnquiryReplyForm(forms.ModelForm):
         widgets = {
             'reply': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your reply here...'}),
         }
+class CaseSheetForm(forms.ModelForm):
+    class Meta:
+        model = CaseSheet
+        fields = [ 'patient_name', 'address', 'district', 'city', 'gender','age', 'contact_no', 'other_details']

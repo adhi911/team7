@@ -410,4 +410,59 @@ def user_enquiry_delete(request, enquiry_id):
     return redirect('user_enquiries_list')
 def custom_logout_view(request):
     request.session.flush()
-    return redirect('index')    
+    return redirect('index')
+
+def case_sheet_add(request):
+    id = request.session.get('hospital_id')
+    h = get_object_or_404(Login, id = id)
+    if request.method == 'POST':
+        form = CaseSheetForm(request.POST)
+        if form.is_valid():
+            case_sheet = form.save(commit=False)
+            case_sheet.hospital = h
+            case_sheet.save()
+            return redirect('hospitalhome')
+    else:
+        form = CaseSheetForm()
+    return render(request, 'case_sheet_form.html', {'form': form})   
+ 
+def case_sheet_list(request):
+    id = request.session.get('hospital_id')
+    h = get_object_or_404(Login, id = id)
+    case_sheets = CaseSheet.objects.filter(hospital = h)
+    return render(request, 'case_sheet_list.html', {'case_sheets': case_sheets})
+
+def case_sheet_edit(request, id):
+    case_sheet = get_object_or_404(CaseSheet, id=id)
+    if request.method == 'POST':
+        form = CaseSheetForm(request.POST, instance=case_sheet)
+        if form.is_valid():
+            form.save()
+            return redirect('case_sheet_list')
+    else:
+        form = CaseSheetForm(instance=case_sheet)
+    return render(request, 'case_sheet_form.html', {'form': form})
+
+def case_sheet_delete(request, id):
+    case_sheet = get_object_or_404(CaseSheet, id=id)
+    case_sheet.delete()
+    return redirect('case_sheet_list')
+
+def case_search(request):
+    id = request.session.get('hospital_id')
+    h = get_object_or_404(Login, id = id)
+    if request.method == 'POST':
+        query = request.POST.get('search')
+        stations = CaseSheet.objects.filter(
+            Q(hospital_id=h) &
+            Q(patient_name__icontains=query) |
+            Q(contact_no__icontains=query) |
+            Q(current_date__icontains=query) 
+        )
+        if not stations:
+            messages.error(request, 'No results found.')
+        
+        return render(request, 'casesearch.html', {'stations': stations})
+    else:
+        return render(request, 'casesearch.html')        
+    

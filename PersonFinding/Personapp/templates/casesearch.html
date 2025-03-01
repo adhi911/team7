@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{% static 'admin/vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        search station: <input type="text" name="search" required />
+        <button type="submit">search</button> 
+    </form>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <p class="error">{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+    {% if stations  %}
+    <table class="display table table-striped table-hover">
+        <tr>
+            <th>Hospitalid</th>
+            <th>Patient Name</th>
+            <th>Address</th>
+            <th>District</th>
+            <th>City</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Contactno</th>
+            <th>Other Details</th>
+            <th>Current Date</th>
+        </tr>
+        {% for station in stations %}
+        <tr>
+            <td>{{station.hospital_id}}</td>
+            <td>{{station.patient_name}}</td>
+            <td>{{station.address}}</td>
+            <td>{{station.district}}</td>
+            <td>{{station.city}}</td>
+            <td>{{station.gender}}</td>
+            <td>{{station.age}}</td>
+            <td>{{station.contact_no}}</td>
+            <td>{{station.other_details}}</td>
+            <td>{{station.current_date}}</td>
+            {% comment %} <td>
+                <a href="{% url 'station_enquiry' station.id %}" class="btn btn-primary">Enquiry</a>
+            </td> {% endcomment %}
+
+        </tr>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

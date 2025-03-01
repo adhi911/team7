@@ -77,14 +77,14 @@
                                 <a href="{% url 'hospitalhomeprofile' %}" class="nav-item nav-link">Profile</a>
                                 <a href="{% static 'user/team.html' %}" class="nav-item nav-link">Attorneys</a>
                                 <a href="{% static 'user/portfolio.html' %}" class="nav-item nav-link">Case Studies</a>
-                                {% comment %} <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Registeration</a>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Case Sheet</a>
                                     <div class="dropdown-menu">
-                                        <a href="{% url 'Userregister' %}" class="dropdown-item">USER</a>
-                                        <a href="{% url 'Hospitalregister' %}" class="dropdown-item">HOSPITAL</a>
-                                        <a href="{% url 'Stationregister' %}" class="dropdown-item">STATION</a>
+                                        <a href="{% url 'case_sheet_add' %}" class="dropdown-item">Registeration</a>
+                                        <a href="{% url 'case_sheet_list' %}" class="dropdown-item">view</a>
+                                        <a href="{% url 'case_search' %}" class="dropdown-item">Search</a>
                                     </div>
-                                </div> {% endcomment %}
+                                </div>
                                 <a href="{% static 'user/contact.html' %}" class="nav-item nav-link">Contact</a>
                             </div>
                             <div class="ml-auto">
