@@ -1,43 +1,40 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form method="post">
-        {% csrf_token %}
-        HOSPITAL SEARCH: <input type="text" name="search" />
-        <button type="submit">search</button> 
-    </form>
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-            <p class="error">{{ message }}</p>
+
+{% block content %}
+<h2>Hospital Search</h2>
+
+<!-- ✅ Make sure the form sends a POST request -->
+<form method="POST" action="{% url 'hospitalsearch' %}">
+    {% csrf_token %}
+    <input type="text" name="search" placeholder="Search hospitals..." value="{{ query }}" required>
+    <button type="submit">Search</button>
+</form>
+
+<h2>Hospital Search Results</h2>
+
+{% if hospitals %}
+    <table border="1">
+        <tr>
+            <th>Hospital Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Contact</th>
+            <th>Action</th>
+        </tr>
+        {% for hospital in hospitals %}
+        <tr>
+            <td>{{ hospital.hospitalname }}</td>
+            <td>{{ hospital.hospitaladdress }}</td>
+            <td>{{ hospital.city }}</td>
+            <td>{{ hospital.contactno }}</td>
+            <td>
+                <a href="{% url 'station_send_enquiry' hospital.id %}" class="btn btn-primary">Send Enquiry</a>
+            </td>
+        </tr>
         {% endfor %}
-    </div>
+    </table>
+{% else %}
+    <p>No results found.</p>
 {% endif %}
-    {% if stations  %}
-    <table border='1'>
-        <tr>
-            <th>hospitalname</th>
-              <th>hospitaladdress</th>
-              <th>city</th>
-              <th>district</th>
-              <th>state</th>
-        </tr>
-        {% for station in stations %}
-        <tr>
-            <td>{{station.hospitalname}}</td>
-            <td>{{station.hospitaladdress}}</td>
-            <td>{{station.city}}</td>
-            <td>{{station.district}}</td>
-            <td>{{station.state}}</td>
-        </tr>
-        {% endfor %}
-    {% endif %}
-    
-</body>
-</html>
+
+{% endblock %}

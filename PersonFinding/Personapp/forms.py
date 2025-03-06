@@ -68,6 +68,20 @@ class StationEnquiryReplyForm(forms.ModelForm):
         widgets = {
             'reply': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your reply here...'}),
         }
+class HospitalEnquiryForm(forms.ModelForm):
+    class Meta:
+        model = HospitalEnquiry
+        fields = ['message']
+        widgets = {
+            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter enquiry details...'}),
+        }
+class HospitalEnquiryReplyForm(forms.ModelForm):
+    class Meta:
+        model = HospitalEnquiry
+        fields = ['reply'] 
+        widgets = {
+            'reply': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter reply here...'}),
+        }
 class CaseSheetForm(forms.ModelForm):
     class Meta:
         model = CaseSheet

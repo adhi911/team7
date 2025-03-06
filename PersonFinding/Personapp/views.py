@@ -181,22 +181,27 @@ def stationsearch(request):
     
 def hospitalsearch(request):
     if request.method == 'POST':
-        query = request.POST.get('search')
-        stations = Hospital.objects.filter(
-            Q(hospitalname__icontains=query) |
-            Q(hospitaladdress__icontains=query) |
-            Q(city__icontains=query) |
-            Q(district__icontains=query) |
-            Q(state__icontains=query)
-        )
-        
-        # Check if no results were found
-        if not stations:
-            messages.error(request, 'No results found.')
-        
-        return render(request, 'hospitalsearch.html', {'stations': stations})
-    else:
-        return render(request, 'hospitalsearch.html')            
+        query = request.POST.get('search', '').strip()  
+        print(f"Search Query: {query}")
+
+        if query:  
+            hospitals = Hospital.objects.filter(
+                Q(hospitalname__icontains=query) |
+                Q(hospitaladdress__icontains=query) |
+                Q(city__icontains=query) |
+                Q(district__icontains=query) |
+                Q(state__icontains=query)
+            )
+            print(f"Hospitals Found: {hospitals.count()}")
+            for hospital in hospitals:
+                print(f"ID: {hospital.id}, Name: {hospital.hospitalname}")
+            if not hospitals:
+                messages.error(request, "No results found.") 
+            return render(request, 'hospitalsearch.html', {'hospitals': hospitals, 'query': query})
+        else:
+            messages.error(request, "Please enter a search query.")
+    return render(request, 'hospitalsearch.html')
+ 
 def missform(request):
     logid = request.session.get('user_id')
     loddata = get_object_or_404(Login,id=logid)
@@ -410,7 +415,83 @@ def user_enquiry_delete(request, enquiry_id):
     return redirect('user_enquiries_list')
 def custom_logout_view(request):
     request.session.flush()
-    return redirect('index')
+    return redirect('index')    
+def station_send_enquiry(request, hospital_id):
+    station_id = request.session.get('station_id')
+
+    if not station_id:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
+
+    station = get_object_or_404(Station, loginid=station_id)
+    hospital = get_object_or_404(Hospital, id=hospital_id)  
+
+    if request.method == 'POST':
+        form = HospitalEnquiryForm(request.POST)
+        if form.is_valid():
+            enquiry = form.save(commit=False)
+            enquiry.station = station
+            enquiry.hospital = hospital
+            enquiry.save()
+            messages.success(request, "Enquiry sent successfully!")
+            return redirect('station_enquiries_list')
+    else:
+        form = HospitalEnquiryForm()
+
+    return render(request, 'station_send_enquiry1.html', {'form': form, 'hospital': hospital})
+
+
+def station_enquiries_list(request):
+    station_id = request.session.get('station_id')
+
+    if not station_id:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
+
+    station = get_object_or_404(Station, loginid=station_id)
+
+    # Fetch station enquiries sent to hospitals
+    enquiries = HospitalEnquiry.objects.filter(station=station).order_by('-current_date')
+
+    # Debugging: Print retrieved enquiries
+    print("Enquiries Found:")
+    for enquiry in enquiries:
+        print(f"ID: {enquiry.id}, Hospital: {enquiry.hospital.hospitalname}, Message: {enquiry.message}")
+
+    return render(request, 'station_enquiries_list1.html', {'enquiries': enquiries})
+def hospital_enquiries_list(request):
+    hospital_id = request.session.get('hospital_id')
+
+    if not hospital_id:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
+
+    hospital = get_object_or_404(Hospital, loginid=hospital_id)
+
+    # Fetch enquiries received by this hospital
+    enquiries = HospitalEnquiry.objects.filter(hospital=hospital).order_by('-current_date')
+
+    return render(request, 'hospital_enquiries_list.html', {'enquiries': enquiries, 'hospital': hospital})
+def hospital_enquiry_reply(request, enquiry_id):
+    hospital_id = request.session.get('hospital_id')
+
+    if not hospital_id:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
+
+    hospital = get_object_or_404(Hospital, loginid=hospital_id)
+    enquiry = get_object_or_404(HospitalEnquiry, id=enquiry_id, hospital=hospital)
+
+    if request.method == 'POST':
+        form = HospitalEnquiryReplyForm(request.POST, instance=enquiry)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Reply sent successfully!")
+            return redirect('hospital_enquiries_list')
+    else:
+        form = HospitalEnquiryReplyForm(instance=enquiry)
+
+    return render(request, 'hospital_enquiry_reply.html', {'form': form, 'enquiry': enquiry})
 
 def case_sheet_add(request):
     id = request.session.get('hospital_id')
@@ -464,5 +545,4 @@ def case_search(request):
         
         return render(request, 'casesearch.html', {'stations': stations})
     else:
-        return render(request, 'casesearch.html')        
-    
+        return render(request, 'casesearch.html')
