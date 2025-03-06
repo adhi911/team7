@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Send Enquiry to {{ hospital.hospitalname }}</h2>  <!-- ✅ Display the correct hospital name -->
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">Send Enquiry</button>
+</form>
+
+<a href="{% url 'hospitalsearch' %}">Back to Search</a>
+</body>
+</html>
