@@ -1,0 +1,11 @@
+<h2>Upload POST-MORTEM REPORT for Case: {{ case_sheet.patient_name }}</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="file">Upload POST-MORTEM REPORT :</label>
+    <input type="file" name="file" required>
+    
+    <button type="submit">Upload</button>
+</form>
+
+<a href="{% url 'case_search' %}">Back to Case Search</a>

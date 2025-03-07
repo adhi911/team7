@@ -94,6 +94,7 @@ class CaseSheet(models.Model):
     contact_no = models.CharField(max_length=15)
     other_details = models.TextField(blank=True, null=True)
     current_date = models.DateField(auto_now_add=True)
+    file = models.ImageField(upload_to='image',blank=True)
     def __str__(self):
         return f"Case Sheet for {self.patient_name} - {self.hospital.email}"  
 

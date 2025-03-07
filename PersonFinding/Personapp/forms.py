@@ -86,3 +86,8 @@ class CaseSheetForm(forms.ModelForm):
     class Meta:
         model = CaseSheet
         fields = [ 'patient_name', 'address', 'district', 'city', 'gender','age', 'contact_no', 'other_details']
+
+class CaseSheetFileUploadForm(forms.ModelForm):
+    class Meta:
+        model = CaseSheet
+        fields = ['file']  

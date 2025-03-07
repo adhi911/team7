@@ -546,3 +546,15 @@ def case_search(request):
         return render(request, 'casesearch.html', {'stations': stations})
     else:
         return render(request, 'casesearch.html')
+    
+def case_upload_file(request, case_id):
+    case_sheet = get_object_or_404(CaseSheet, id=case_id)
+    if request.method == 'POST':
+        form = CaseSheetFileUploadForm(request.POST, request.FILES, instance=case_sheet)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "File uploaded successfully!")
+            return redirect('case_search') 
+    else:
+        form = CaseSheetFileUploadForm(instance=case_sheet)
+    return render(request, 'case_upload_file.html', {'form': form, 'case_sheet': case_sheet})
