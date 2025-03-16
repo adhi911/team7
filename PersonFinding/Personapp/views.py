@@ -558,3 +558,4 @@ def case_upload_file(request, case_id):
     else:
         form = CaseSheetFileUploadForm(instance=case_sheet)
     return render(request, 'case_upload_file.html', {'form': form, 'case_sheet': case_sheet})
+    

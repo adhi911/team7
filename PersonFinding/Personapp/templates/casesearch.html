@@ -75,7 +75,7 @@
                 <td>{{ case.patient_name }}</td>
                 <td>{{ case.contact_no }}</td>
                 <td>{{ case.current_date }}</td>
-                <td>
+                 <td>
                     {% if case.file %}
                         <a href="{{ case.file.url }}" target="_blank">
                             <button type="button" style="background-color: green;">View Report</button>
@@ -88,13 +88,23 @@
                 </td>
             </tr>
             {% endfor %}
+            {% for case in stations %}
+             <td>
+                {% if case.file %}
+                    <a href="{{ case.file.url }}" target="_blank">
+                        <button type="button" style="background-color: green;">View Report</button>
+                    </a>
+                {% else %} 
+                 {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
         </table>
     {% else %}
         <p>No results found.</p>
     {% endif %}
 
     <script>
-        // Auto-hide success message after 3 seconds
         setTimeout(function() {
             let alert = document.querySelector(".alert");
             if (alert) {
