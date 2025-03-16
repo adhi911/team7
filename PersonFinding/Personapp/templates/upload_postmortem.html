@@ -1,0 +1,8 @@
+{% block content %}
+<h2>Upload Postmortem Report for {{ case_sheet.patient_name }}</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload Report</button>
+</form>
+{% endblock %}

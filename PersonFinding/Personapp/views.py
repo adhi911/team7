@@ -558,4 +558,22 @@ def case_upload_file(request, case_id):
     else:
         form = CaseSheetFileUploadForm(instance=case_sheet)
     return render(request, 'case_upload_file.html', {'form': form, 'case_sheet': case_sheet})
-    
+
+def post_sheet_list(request):
+    id = request.session.get('hospital_id')
+    h = get_object_or_404(Login, id = id)
+    case_sheets = CaseSheet.objects.filter(hospital = h)
+    return render(request, 'postmortam_list.html', {'case_sheets': case_sheets})
+
+def upload_postmortem_report(request, case_id):
+    case_sheet = get_object_or_404(CaseSheet, id=case_id)
+    if request.method == 'POST':
+        form = PostmortemReportForm(request.POST, request.FILES, instance=case_sheet)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Postmortem report uploaded successfully!")
+            return redirect('case_sheet_list')
+    else:
+        form = PostmortemReportForm(instance=case_sheet)
+
+    return render(request, 'upload_postmortem.html', {'form': form, 'case_sheet': case_sheet})

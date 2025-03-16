@@ -91,3 +91,7 @@ class CaseSheetFileUploadForm(forms.ModelForm):
     class Meta:
         model = CaseSheet
         fields = ['file']  
+class PostmortemReportForm(forms.ModelForm):
+    class Meta:
+        model = CaseSheet
+        fields = ['postmortem_report']

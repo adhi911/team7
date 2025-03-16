@@ -58,5 +58,7 @@ urlpatterns = [
     path('case_sheet_delete/<int:id>', views.case_sheet_delete, name='case_sheet_delete'),
     path('case_search', views.case_search, name='case_search'),
     path('case-upload/<int:case_id>/',views.case_upload_file, name='case_upload_file'),
+    path('post_sheet_list', views.post_sheet_list, name='post_sheet_list'),
+    path('upload_postmortem_report/<int:case_id>', views.upload_postmortem_report, name='upload_postmortem_report'),
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
 

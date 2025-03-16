@@ -1,0 +1,41 @@
+
+{% block content %}
+<h2>Postmortem Report</h2>
+<a href="{% url 'case_sheet_add' %}">Add New Case Sheet</a>
+<table border="1">
+    <tr>
+        <th>Patient Name</th>
+        <th>Age</th>
+        <th>Contact No</th>
+        <th>Gender</th>
+        <th>City</th>
+        <th>District</th>
+        <th>Address</th>
+        <th>Postmortem Report</th>
+        <th>Actions</th>
+    </tr>
+    {% for case in case_sheets %}
+    <tr>
+        <td>{{ case.patient_name }}</td>
+        <td>{{ case.age }}</td>
+        <td>{{ case.contact_no }}</td>
+        <td>{{ case.gender }}</td>
+        <td>{{ case.city }}</td>
+        <td>{{ case.district }}</td>
+        <td>{{ case.address }}</td>
+        <td>Gender</td>
+        <td>
+            {% if case.postmortem_report %}
+                <a href="{{ case.postmortem_report.url }}" target="_blank">View Report</a>
+            {% else %}
+                <a href="{% url 'upload_postmortem_report' case.id %}">Upload Postmortem Report</a>
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'case_sheet_edit' case.id %}">Edit</a>
+            <a href="{% url 'case_sheet_delete' case.id %}" onclick="return confirm('Are you sure?');">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
