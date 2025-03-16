@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Reply to Enquiry from {{ enquiry.station.stationid }}</h2>
+
+<p><strong>Message:</strong> {{ enquiry.message }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">Send Reply</button>
+</form>
+
+<a href="{% url 'hospital_enquiries_list' %}">Back to Enquiries</a>
+</body>
+</html>

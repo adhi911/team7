@@ -1,0 +1,48 @@
+
+{% comment %} {% extends 'indexheader.html' %}
+{% block content %} {% endcomment %}
+{% load static %}
+<html>
+<body>
+    {% comment %} <link href="{% static 'admin/vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet"> {% endcomment %}
+<table id="basic-datatables" class="display table table-striped table-hover" border="2">
+        <thead> 
+        <tr>
+            <th>Name</th>
+            <th>Picture</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Address</th>
+            <th>Missing Date</th>
+            <th>Missing Place</th>
+            <th>Height</th>
+            <th>Weight</th>
+            <th>Identification Mark</th>
+            <th>Blood Group</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in missing_persons %}
+        <tr>
+            <td>{{ person.name }}</td>
+        <td><img src="{{ person.missingpersonpic.url }}" alt="Missing Person Picture" style="max-width: 100px; max-height: 100px; object-fit: cover;" /></td>
+
+            <td>{{ person.gender }}</td>
+            <td>{{ person.age }}</td>
+            <td>{{ person.address }}</td>
+            <td>{{ person.missingdate }}</td>
+            <td>{{ person.missingplace }}</td>
+            <td>{{ person.height }}</td>
+            <td>{{ person.weight }}</td>
+            <td>{{ person.identificationmark }}</td>
+            <td>{{ person.bloodgroup }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="11">No missing persons available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table></body>
+</html>
+{% comment %} {% endblock %} {% endcomment %}

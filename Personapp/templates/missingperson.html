@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<center>
+<body>
+    <form id="form1" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{miss.as_p}}
+        <button type="submit">REGISTER</button>
+    </form>
+</body>
+</center>
+</html>

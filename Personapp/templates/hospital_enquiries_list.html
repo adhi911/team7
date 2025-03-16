@@ -1,0 +1,33 @@
+
+{% block content %}
+<h2>My Enquiries to Hospitals</h2>
+
+{% if enquiries %}
+    <table border="1">
+        <tr>
+            <th>Hospital</th>
+            <th>Message</th>
+            <th>Reply</th>
+            <th>Submitted On</th>
+        </tr>
+        {% for enquiry in enquiries %}
+        <tr>
+            <td>{{ enquiry.hospital.hospitalname }}</td>
+            <td>{{ enquiry.message }}</td>
+            <td>{{ enquiry.current_date }}</td>
+            <td>
+                {% if enquiry.reply %}
+                    <span class="text-success">Replied</span>
+                {% else %}
+                    <a href="{% url 'hospital_enquiry_reply' enquiry.id %}" class="btn btn-primary">Reply</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No enquiries found.</p>
+{% endif %}
+
+<a href="{% url 'hospitalhome' %}">Back to Dashboard</a>
+{% endblock %}

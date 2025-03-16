@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>Table</title>
+</head>
+<body>
+<table border="2">
+  <tr> 
+    <th>Name</th>
+    <th>Missing Person Picture</th>
+    <th>Gender</th>
+    <th>Age</th>
+    <th>Address</th>
+    <th>Missing Date</th>
+    <th>Missing Place</th>
+    <th>Height</th>
+    <th>Weight</th>
+    <th>Identification mark</th>
+    <th>BloodGroup</th>
+  </tr>
+  {% for user in users %}
+  <tr>
+    <td>{{user.name}}</td>
+    <td>{{ user.missingpersonpic }}</td>
+    <td>{{ user.gender }}</td>
+    <td>{{ user.age }}</td>
+    <td>{{ user.address }}</td>
+    <td>{{ user.missingdate }}</td>
+    <td>{{ user.missingplace }}</td>
+    <td>{{ user.height }}</td>
+    <td>{{ user.weight }}</td>
+    <td>{{ user.identificationmark }}</td>
+    <td>{{ user.bloodgroup }}</td>
+    <td>
+    <a href="{% url 'user_edit' user.id %}">edit</a>
+    </td>
+    <td>
+    <a href="{% url 'user_delete' user.id %}">delete</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</body>
+</html>

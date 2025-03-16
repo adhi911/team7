@@ -1,0 +1,13 @@
+
+{% block content %}
+<h2>Edit Enquiry</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">Update Enquiry</button>
+</form>
+
+<a href="{% url 'user_enquiries_list' %}">Back to Enquiries</a>
+{% endblock %}

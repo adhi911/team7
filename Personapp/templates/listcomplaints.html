@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>Table</title>
+</head>
+<body>
+<table border="2">
+  <tr> 
+    <th>Subject</th>
+    <th>Complaint</th>
+    
+  </tr>
+  {% for user in form %}
+  <tr>
+    <td>{{user.subject}}</td>
+    <td>{{user.complaint }}</td>
+    <td><button class="btn btn-primary"><a href="{% url "ShowReply" user.id %}"style="color: Blackberry;text-decoration: none;">Reply</a></button></td>
+     <td>
+      <button class="btn btn-primary"><a href="{% url 'EditComplaint' user.id %}"style="color: Blackberry;text-decoration: none;">edit</a></button>
+    </td>
+    <td>
+      <button class="btn btn-primary"><a href="{% url 'DeleteComplaint' user.id %}"style="color: Blackberry;text-decoration: none;">delete</a></button>
+    </td> 
+  </tr>
+  {% endfor %}
+</table>
+</body>
+</html>

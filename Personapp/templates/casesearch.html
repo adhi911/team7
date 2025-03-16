@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .alert {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Success Message Display -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Case Search Form -->
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="Search cases..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if stations %}
+        <table>
+            <tr>
+                <th>Patient Name</th>
+                <th>Contact No</th>
+                <th>Case Date</th>
+                <th>Report</th>
+            </tr>
+            {% for case in stations %}
+            <tr>
+                <td>{{ case.patient_name }}</td>
+                <td>{{ case.contact_no }}</td>
+                <td>{{ case.current_date }}</td>
+                 <td>
+                    {% if case.file %}
+                        <a href="{{ case.file.url }}" target="_blank">
+                            <button type="button" style="background-color: green;">View Report</button>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'case_upload_file' case.id %}">
+                            <button type="button">ADD REPORT</button>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% for case in stations %}
+             <td>
+                {% if case.file %}
+                    <a href="{{ case.file.url }}" target="_blank">
+                        <button type="button" style="background-color: green;">View Report</button>
+                    </a>
+                {% else %} 
+                 {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+
+    <script>
+        setTimeout(function() {
+            let alert = document.querySelector(".alert");
+            if (alert) {
+                alert.classList.add("hidden");
+            }
+        }, 3000);
+    </script>
+
+</body>
+</html>

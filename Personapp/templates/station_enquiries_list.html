@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+{% block content %}
+<h2>Enquiries Received for {{ station.stationid }}</h2>
+
+{% if enquiries %}
+    <table border="1">
+        <tr>
+            <th>Enquiry ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Submitted On</th>
+        </tr>
+        {% for enquiry in enquiries %}
+        <tr>
+            <td>{{ enquiry.id }}</td>
+            <td>{{ enquiry.name }}</td>
+            <td>{{ enquiry.email }}</td>
+            <td>{{ enquiry.message }}</td>
+            <td>{{ enquiry.current_date }}</td>
+        </tr>
+        <td>
+            {% if enquiry.reply %}
+                <span class="text-success">Replied</span>
+            {% else %}
+                <a href="{% url 'station_enquiry_reply' enquiry.id %}" class="btn btn-primary">Reply</a>
+            {% endif %}
+        </td>
+        
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No enquiries received.</p>
+{% endif %}
+
+<a href="{% url 'stationhome' %}">Back to Dashboard</a>
+
+{% endblock %}
+</body>
+</html>

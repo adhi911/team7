@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accident Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+
+        a:hover {
+            background-color: #ddd;
+        }
+
+        .action-column {
+            width: 150px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Accident Information</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Accident ID</th>
+            <th>User</th>
+            <th>City</th>
+            <th>District</th>
+            <th>Location</th>
+            <th>Accident Date</th>
+            <th>Accident Details</th>
+            <th>Media</th>
+            <th class="action-column">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for accident in form %}
+        <tr>
+            <td>{{ accident.id }}</td>
+            <td>{{ accident.userid.id }}</td>
+            <td>{{ accident.city }}</td>
+            <td>{{ accident.district }}</td>
+            <td>{{ accident.location }}</td>
+            <td>{{ accident.currentdate }}</td>
+            <td>{{ accident.accidentdetails }}</td>
+            <td>
+                {% if accident.media %}
+                    <img src="{{ accident.media.url }}" alt="Accident Media" width="50" height="50">
+                {% else %}
+                    No Media
+                {% endif %}
+            </td>
+             <td class="action-column">
+                <a href="{% url 'accident_edit' accident.id %}">Edit</a> | 
+                <a href="{% url 'accident_delete' accident.id %}">Delete</a>
+            </td> 
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
